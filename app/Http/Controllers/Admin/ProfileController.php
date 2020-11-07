@@ -18,6 +18,6 @@ class ProfileController extends Controller
     }
     public function edit()
     {
-        return view('admin.profle.edit');
+        return view('admin.profile.edit');
     }
 }
