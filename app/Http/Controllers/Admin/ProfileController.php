@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Profile;
+use App\Profiles;
+
+use Carbon\Carbon;
+use App\ProfileHistory;
 
 class ProfileController extends Controller
 {
@@ -12,42 +15,54 @@ class ProfileController extends Controller
     {
         return view('admin.profile.create');
     }
+    
     public function create(Request $request)
     {
-        $this->validate($request, Profile::$rules);
+        $this->validate($request, Profiles::$rules);
         
-        $profile = new Profile;
+        $profiles = new Profiles;
         $form = $request->all();
         
         unset($form['_token']);
-        unset($form['image']);
         
-        $profile->fill($form);
-        $profile->save();
+        $profiles->fill($form);
+        $profiles->save();
         
         return redirect('admin/profile/create');
     }
+    
     public function edit(Request $request)
     {
-        $profile = Profile::find($request->id);
-        return view('admin.profile.edit', ['profile_form' => $profile]);
+        $profiles = Profiles::find($request->id);
+        if (empty($profiles)) {
+            abort(404);
+        }
+        return view('admin.profile.edit', ['profile_form' => $profiles]);
     }
     
     public function update(Request $request)
     {
-        $this->validate($request, Profile::$rules);
-        $profile = Profile::find($request->id);
+        $this->validate($request, Profiles::$rules);
+        
+        $profiles = Profiles::find($request->id);
+        
         $profile_form = $request->all();
         unset($profile_form['_token']);
         
-        $profile->fill($profile_form)->save();
+        $profiles->fill($profile_form)->save();
+        
+        $history = new ProfileHistory;
+        $history->profiles_id = $profiles->id;
+        $history->edited_at = Carbon::now();
+        $history->save();
+        
         return redirect('admin/profile');
     }
     
     public function delete(Request $request)
     {
-        $profile = Profile::find($request->id);
-        $profile->delete();
+        $profiles = Profiles::find($request->id);
+        $profiles->delete();
         return redirect('admin/profile/');
     }
 }
