@@ -24,6 +24,9 @@ Route::group(['prefix' => 'admin'], function() {
     Route::get('news/delete', 'Admin\NewsController@delete')->middleware('auth');
     Route::get('profile/create', 'Admin\ProfileController@add')->middleware('auth');
     Route::get('profile/edit', 'Admin\ProfileController@edit')->middleware('auth');
+    Route::get('profile', 'Admin\ProfileController@index')->middleware('auth');
+    Route::post('profile/edit', 'Admin\ProfileController@update')->middleware('auth');
+    Route::get('profile/delete', 'Admin\ProfileController@delete')->middleware('auth');
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
