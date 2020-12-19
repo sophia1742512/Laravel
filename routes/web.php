@@ -36,6 +36,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
      ROUTE::post('profile/edit', 'Admin\ProfileController@update');
 });
 
+Route::get('/', 'NewsController@index');
 
 //課題３
 
